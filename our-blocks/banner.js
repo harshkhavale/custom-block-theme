@@ -4,7 +4,7 @@ import { InnerBlocks, useBlockProps } from "@wordpress/block-editor";
 
 registerBlockType("ourblocktheme/banner", {
   title: "Banner",
-  icon: "dashicons-image-rotate-right",
+  icon: "shield",
 
   edit: EditComponent,
   save: SaveComponent,
@@ -37,7 +37,7 @@ function EditComponent() {
           }}
         ></div>
         <div className="page-banner__content container t-center c-white">
-          <InnerBlocks />
+          <InnerBlocks allowedBlocks={["ourblocktheme/genericheader"]} />
         </div>
       </div>
     </div>
