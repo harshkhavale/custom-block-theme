@@ -1,8 +1,9 @@
+import apiFetch from "@wordpress/api-fetch"
+import {useState,useEffect} from 'react'
 const { registerBlockType } = wp.blocks;
 const { createElement } = wp.element;
-import { InnerBlocks, useBlockProps } from "@wordpress/block-editor";
-import { MediaUploadCheck } from "@wordpress/block-editor/build/components";
-
+import { InnerBlocks, useBlockProps,InspectorControls, MediaUploadCheck,MediaUpload } from "@wordpress/block-editor";
+import {PanelBody,PanelRow,ButtonGroup,Button } from "@wordpress/components";
 registerBlockType("ourblocktheme/banner", {
   title: "Banner",
   icon: "shield",
@@ -11,29 +12,26 @@ registerBlockType("ourblocktheme/banner", {
   },
   attributes: {
     align: { type: "string", default: "full" },
+    imgID:{type:"number"},
+    imgURL:{type:"string",default:window.banner.fallbackimage},
   },
   edit: EditComponent,
   save: SaveComponent,
 });
-function EditComponent() {
-  function useMeLater() {
-    <>
-      <h1 className="headline headline--large">Welcome!</h1>
-      <h2 className="headline headline--medium">
-        We think you&rsquo;ll like it here.
-      </h2>
-      <h3 className="headline headline--small">
-        Why don&rsquo;t you check out the <strong>major</strong> you&rsquo;re
-        interested in?
-      </h3>
-      <a href="#" className="btn btn--large btn--blue">
-        Find Your Major
-      </a>
-    </>;
-  }
+function EditComponent(props) {
+  useEffect(function(){
+    async function go(){
+const response = await apiFetch({
+  path: `/wp/v2/media/${props.attributes.imgID}`,
+  method: "GET",
+});
+props.setAttributes({imgURL: response.media_details.sizes.pageBanner.source_url})
+}
+    go();
+  },[props.attributes.imgID])
   const blockProps = useBlockProps();
   function onFileSelect(x) {
-    console.log(x);
+    props.setAttributes({ imgID: x.id });
   }
   return (
     <div {...blockProps}>
@@ -43,7 +41,7 @@ function EditComponent() {
             <MediaUploadCheck>
               <MediaUpload
                 onSelect={onFileSelect}
-                value={1}
+                value={props.attributes.imgID}
                 render={({ open }) => {
                   return <Button onClick={open}>Choose Image</Button>;
                 }}
@@ -56,8 +54,8 @@ function EditComponent() {
         <div
           className="page-banner__bg-image"
           style={{
-            backgroundImage:
-              "url('/wp-content/themes/fictional-block-theme/images/library-hero.jpg')",
+            backgroundImage:`url('${props.attributes.imgURL}')`
+              ,
           }}
         ></div>
         <div className="page-banner__content container t-center c-white">
@@ -73,7 +71,7 @@ function EditComponent() {
   );
 }
 
-function SaveComponent() {
+function SaveComponent(props) {
   const blockProps = useBlockProps.save();
   return (
     <div {...blockProps}>
