@@ -1,0 +1,1 @@
+registerBlockType("ourblocktheme/blogindex",{title:"Blog Index",edit:function(e){return createElement("div",{className:"our-placeholder-block"},"Blog Index Placeholder")},save:function(e){return null}});

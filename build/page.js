@@ -1,0 +1,1 @@
+registerBlockType("ourblocktheme/page",{title:"Single Page",edit:function(e){return createElement("div",{className:"our-placeholder-block"},"Single Page Placeholder")},save:function(e){return null}});

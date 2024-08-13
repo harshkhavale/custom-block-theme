@@ -15,35 +15,36 @@ function university_custom_rest() {
 
 add_action('rest_api_init', 'university_custom_rest');
 
-function pageBanner($args = NULL) {
-  
-  if (!$args['title']) {
-    $args['title'] = get_the_title();
-  }
+function pageBanner($args = NULL)
+{
 
-  if (!$args['subtitle']) {
-    $args['subtitle'] = get_field('page_banner_subtitle');
-  }
-
-  if (!$args['photo']) {
-    if (get_field('page_banner_background_image') AND !is_archive() AND !is_home() ) {
-      $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
-    } else {
-      $args['photo'] = get_theme_file_uri('/images/ocean.jpg');
+    if (!isset($args['title'])) {
+        $args['title'] = get_the_title();
     }
-  }
 
-  ?>
-  <div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo $args['photo']; ?>);"></div>
-    <div class="page-banner__content container container--narrow">
-      <h1 class="page-banner__title"><?php echo $args['title'] ?></h1>
-      <div class="page-banner__intro">
-        <p><?php echo $args['subtitle']; ?></p>
-      </div>
-    </div>  
-  </div>
-<?php }
+    if (!isset($args['subtitle'])) {
+        $args['subtitle'] = get_field('page_banner_subtitle');
+    }
+
+    if (!isset($args['photo'])) {
+        if (get_field('page_banner_background') and !is_archive() and !is_home()) {
+            $args['photo'] = get_field('page_banner_background')['sizes']['pageBanner'];
+        } else {
+            $args['photo'] = get_theme_file_uri('/images/ocean.jpg');
+        }
+    }
+?>
+    <div class="page-banner">
+        <div class="page-banner__bg-image" style="background-image: url(<?php echo esc_url($args['photo']); ?>)"></div>
+        <div class="page-banner__content container t-center c-white">
+            <h1 class="page-banner__title"><?php echo esc_html($args['title']); ?></h1>
+            <div class="page-banner__intro">
+                <p><?php echo esc_html($args['subtitle']); ?></p>
+            </div>
+        </div>
+    </div>
+<?php
+}
 
 function university_files() {
   wp_enqueue_script('googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyDin3iGCdZ7RPomFLyb2yqFERhs55dmfTI', NULL, '1.0', true);
@@ -201,6 +202,12 @@ class PlaceholderBlock {
 new PlaceholderBlock("eventsandblogs");
 new PlaceholderBlock("header");
 new PlaceholderBlock("footer");
+new PlaceholderBlock("singlepost");
+new PlaceholderBlock("page");
+new PlaceholderBlock("blogindex");
+
+
+
 
 class JSXBlock {
   public $name;
