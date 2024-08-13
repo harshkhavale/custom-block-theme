@@ -1,0 +1,1 @@
+registerBlockType("ourblocktheme/programarchive",{title:"Program Archive",edit:function(e){return createElement("div",{className:"our-placeholder-block"},"Program placeholder")},save:function(e){return null}});
