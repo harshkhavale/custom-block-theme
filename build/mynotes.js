@@ -1,0 +1,1 @@
+registerBlockType("ourblocktheme/mynotes",{title:"My Notes",edit:function(e){return createElement("div",{className:"our-placeholder-block"},"My Notes Placeholder")},save:function(e){return null}});

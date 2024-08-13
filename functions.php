@@ -209,6 +209,7 @@ new PlaceholderBlock("programarchive");
 new PlaceholderBlock("singleprogram");
 new PlaceholderBlock("singleprofessor");
 
+new PlaceholderBlock("mynotes");
 
 
 
