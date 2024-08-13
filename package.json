@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
-    "start": "wp-scripts start src/index.js our-blocks/banner.js our-blocks/genericheading.js our-blocks/genericbutton.js our-blocks/slideshow.js our-blocks/slide.js our-blocks/singlepost.js our-blocks/page.js our-blocks/blogindex.js our-blocks/programarchive.js",
+    "start": "wp-scripts start src/index.js our-blocks/banner.js our-blocks/genericheading.js our-blocks/genericbutton.js our-blocks/slideshow.js our-blocks/slide.js our-blocks/singlepost.js our-blocks/page.js our-blocks/blogindex.js our-blocks/programarchive.js our-blocks/singleprogram.js",
     "dev": "wp-scripts start",
     "devFast": "wp-scripts start"
   },
