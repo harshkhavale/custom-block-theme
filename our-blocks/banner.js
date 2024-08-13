@@ -1,9 +1,10 @@
-import apiFetch from "@wordpress/api-fetch"
-import {useState,useEffect} from 'react'
+import apiFetch from "@wordpress/api-fetch";
+import { useState, useEffect } from 'react';
 const { registerBlockType } = wp.blocks;
 const { createElement } = wp.element;
-import { InnerBlocks, useBlockProps,InspectorControls, MediaUploadCheck,MediaUpload } from "@wordpress/block-editor";
-import {PanelBody,PanelRow,ButtonGroup,Button } from "@wordpress/components";
+import { InnerBlocks, useBlockProps, InspectorControls, MediaUploadCheck, MediaUpload } from "@wordpress/block-editor";
+import { PanelBody, PanelRow, Button } from "@wordpress/components";
+
 registerBlockType("ourblocktheme/banner", {
   title: "Banner",
   icon: "shield",
@@ -12,27 +13,35 @@ registerBlockType("ourblocktheme/banner", {
   },
   attributes: {
     align: { type: "string", default: "full" },
-    imgID:{type:"number"},
-    imgURL:{type:"string",default:window.banner.fallbackimage},
+    imgID: { type: "number" },
+    imgURL: { type: "string", default: window.banner.fallbackimage },
   },
   edit: EditComponent,
   save: SaveComponent,
 });
+
 function EditComponent(props) {
-  useEffect(function(){
-    async function go(){
-const response = await apiFetch({
-  path: `/wp/v2/media/${props.attributes.imgID}`,
-  method: "GET",
-});
-props.setAttributes({imgURL: response.media_details.sizes.pageBanner.source_url})
-}
-    go();
-  },[props.attributes.imgID])
+  useEffect(() => {
+    if (props.attributes.imgID) {
+      async function fetchImage() {
+        const response = await apiFetch({
+          path: `/wp/v2/media/${props.attributes.imgID}`,
+          method: "GET",
+        });
+        if (response && response.media_details.sizes.pageBanner) {
+          props.setAttributes({ imgURL: response.media_details.sizes.pageBanner.source_url });
+        }
+      }
+      fetchImage();
+    }
+  }, [props.attributes.imgID]);
+
   const blockProps = useBlockProps();
+  
   function onFileSelect(x) {
     props.setAttributes({ imgID: x.id });
   }
+
   return (
     <div {...blockProps}>
       <InspectorControls>
@@ -54,14 +63,13 @@ props.setAttributes({imgURL: response.media_details.sizes.pageBanner.source_url}
         <div
           className="page-banner__bg-image"
           style={{
-            backgroundImage:`url('${props.attributes.imgURL}')`
-              ,
+            backgroundImage: `url('${props.attributes.imgURL}')`,
           }}
         ></div>
         <div className="page-banner__content container t-center c-white">
           <InnerBlocks
             allowedBlocks={[
-              "ourblocktheme/genericheader",
+              "ourblocktheme/genericheading",
               "ourblocktheme/genericbutton",
             ]}
           />
@@ -75,7 +83,15 @@ function SaveComponent(props) {
   const blockProps = useBlockProps.save();
   return (
     <div {...blockProps}>
-      <InnerBlocks.Content />
+      <div
+        className="page-banner__bg-image"
+        style={{
+          backgroundImage: `url('${props.attributes.imgURL}')`,
+        }}
+      ></div>
+      <div className="page-banner__content container t-center c-white">
+        <InnerBlocks.Content />
+      </div>
     </div>
   );
 }

@@ -1,14 +1,13 @@
 import { registerBlockType } from "@wordpress/blocks";
 import { createElement } from "@wordpress/element";
 import {
-  InnerBlocks,
   useBlockProps,
   RichText,
   BlockControls,
 } from "@wordpress/block-editor";
 import { ToolbarGroup, ToolbarButton } from "@wordpress/components";
 
-registerBlockType("ourblocktheme/genericheader", {
+registerBlockType("ourblocktheme/genericheading", {
   title: "Generic Heading",
   icon: "editor-textcolor",
   category: "common",
@@ -17,7 +16,7 @@ registerBlockType("ourblocktheme/genericheader", {
     text: {
       type: "string",
       source: "html",
-      selector: "h1",
+      selector: "h1,h2,h3",
       default: "Heading Text",
     },
     size: {
@@ -80,9 +79,9 @@ function EditComponent(props) {
 
 function SaveComponent(props) {
   const { attributes } = props;
-  const blockProps = useBlockProps.save();
+
   function createTagName() {
-    switch (props.attributes.size) {
+    switch (attributes.size) {
       case "large":
         return "h1";
       case "medium":
@@ -93,13 +92,12 @@ function SaveComponent(props) {
         return "h1";
     }
   }
+
   return (
-    <div {...blockProps}>
-      <RichText.Content
-        tagName={createTagName()}
-        className={`headline headline--${attributes.size}`}
-        value={props.attributes.text}
-      />
-    </div>
+    <RichText.Content
+      tagName={createTagName()}
+      className={`headline headline--${attributes.size}`}
+      value={attributes.text}
+    />
   );
 }
